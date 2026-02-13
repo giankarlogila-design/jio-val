@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Magic Valentine for Jiovannah 💖</title>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* GENERAL STYLES */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #ffe6f0, #ffc0cb);
+    overflow: hidden;
+    text-align: center;
+    position: relative;
+}
+
+/* CONTAINER */
+.container {
+    background: rgba(255,255,255,0.95);
+    padding: 30px 25px;
+    border-radius: 30px;
+    box-shadow: 0 15px 60px rgba(255,105,180,0.4);
+    max-width: 500px;
+    margin: 50px auto;
+    position: relative;
+    z-index: 2;
+}
+
+/* HEADINGS */
+h1, h2 {
+    font-family: 'Pacifico', cursive;
+    color: #ff4da6;
+    margin-bottom: 15px;
+}
+
+/* PARAGRAPH */
+p {
+    font-size: 16px;
+    color: #444;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+/* BUTTONS */
+button {
+    padding: 12px 25px;
+    margin: 10px;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 5px 15px rgba(255, 105, 180, 0.3);
+}
+button:hover { transform: scale(1.1); }
+
+.yes { background-color: #ff4da6; color: white; }
+.no { background-color: #ffc0cb; position: absolute; }
+
+/* HIDDEN PAGES */
+.hidden { display: none; }
+
+/* BOX ANIMATION */
+#box {
+    font-size: 100px;
+    cursor: pointer;
+    transition: transform 0.5s;
+}
+
+#box.open { transform: rotateX(45deg); }
+
+/* LETTER TYPING */
+.letter-text span {
+    opacity: 0;
+    display: inline-block;
+    animation: fadeIn 0.05s forwards;
+}
+@keyframes fadeIn { to { opacity: 1; } }
+
+/* CONFETTI */
+.confetti {
+    position: absolute;
+    font-size: 20px;
+    animation: confettiFall linear infinite;
+    user-select: none;
+}
+@keyframes confettiFall {
+    0% { transform: translateY(0) rotate(0deg);}
+    100% { transform: translateY(100vh) rotate(360deg);}
+}
+
+/* SPARKLES */
+.sparkle {
+    position: absolute;
+    color: #ff99c8;
+    font-size: 15px;
+    user-select: none;
+    animation: sparkleAnim linear infinite;
+}
+@keyframes sparkleAnim {
+    0% { transform: translateY(100vh) scale(0.5);}
+    100% { transform: translateY(-10vh) scale(1.5);}
+}
+
+/* PETALS */
+.petal {
+    position: absolute;
+    font-size: 25px;
+    animation: petalAnim linear infinite;
+    user-select: none;
+}
+@keyframes petalAnim {
+    0% { transform: translateY(0) rotate(0deg);}
+    50% { transform: translateY(200px) rotate(180deg);}
+    100% { transform: translateY(0) rotate(360deg);}
+}
+</style>
+</head>
+
+<body>
+
+<!-- BACKGROUND ELEMENTS -->
+<div id="sparkles"></div>
+<div id="petals"></div>
+<div id="confetti"></div>
+
+<div class="container">
+
+<!-- PAGE 1: MAGIC BOX -->
+<div id="cover">
+    <h1>💖 Your Special Gift 💖</h1>
+    <p>Click the box to open it...</p>
+    <div id="box">🎁</div>
+</div>
+
+<!-- PAGE 2: LETTER -->
+<div id="letter" class="hidden">
+    <h1>My Dearest Jiovannah,</h1>
+    <p class="letter-text" id="letterText">
+        You are the blush in my mornings, the warmth in my quiet nights, and the sweetest thought I carry every day. 
+        Being with you feels like peace, like laughter, like home.
+    </p>
+    <button class="yes" onclick="nextPage('confettiPage')">Continue 💕</button>
+</div>
+
+<!-- PAGE 3: CONFETTI SWEEP -->
+<div id="confettiPage" class="hidden">
+    <h1>💖 Sweep the Confetti 💖</h1>
+    <p>Clear the confetti to reveal your question!</p>
+    <div id="confettiArea" style="width:100%;height:200px;background:#ffe6f0;position:relative;overflow:hidden;border-radius:20px;">
+    </div>
+</div>
+
+<!-- PAGE 4: QUESTION -->
+<div id="question" class="hidden">
+    <h1>Will You Be My Valentine? 💖</h1>
+    <p>You would make my world even more beautiful ✨</p>
+    <button class="yes" onclick="sayYes()">YES 💕</button>
+    <button class="no" id="noBtn">NO 🙈</button>
+</div>
+
+<!-- PAGE 5: YES RESPONSE -->
+<div id="yesResponse" class="hidden">
+    <h1>💖 You Said YES! 💖</h1>
+    <p>You just made me the happiest person alive.</p>
+    <p>Our Valentine’s date will be magical ✨</p>
+    <p>Yours always, Gian 💕</p>
+</div>
+
+</div>
+
+<!-- BACKGROUND MUSIC -->
+<audio autoplay loop>
+    <source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+// PAGE NAVIGATION
+function nextPage(page) {
+    document.getElementById("cover").classList.add("hidden");
+    document.getElementById("letter").classList.add("hidden");
+    document.getElementById("confettiPage").classList.add("hidden");
+    document.getElementById("question").classList.add("hidden");
+    document.getElementById("yesResponse").classList.add("hidden");
+    document.getElementById(page).classList.remove("hidden");
+    if(page==='letter'){ animateLetter(); }
+}
+
+// MAGIC BOX CLICK
+const box = document.getElementById("box");
+box.addEventListener("click", () => {
+    box.classList.add("open");
+    setTimeout(()=>{ nextPage('letter'); }, 800);
+});
+
+// LETTER TYPING ANIMATION
+function animateLetter() {
+    const text = document.getElementById("letterText").textContent;
+    document.getElementById("letterText").textContent = '';
+    for(let i=0;i<text.length;i++){
+        let span = document.createElement('span');
+        span.textContent = text[i];
+        span.style.animationDelay = (i*0.05)+'s';
+        document.getElementById("letterText").appendChild(span);
+    }
+}
+
+// CONFETTI SWEEP PAGE
+const confettiArea = document.getElementById("confettiArea");
+let confettiCount = 0;
+for(let i=0;i<40;i++){
+    let c = document.createElement('div');
+    c.classList.add('confetti');
+    c.innerHTML = '💖';
+    c.style.position='absolute';
+    c.style.left = Math.random()*90+'%';
+    c.style.top = Math.random()*90+'%';
+    c.style.fontSize = (10+Math.random()*20)+'px';
+    confettiArea.appendChild(c);
+}
+confettiArea.addEventListener('click', function(){
+    confettiCount++;
+    const confs = document.querySelectorAll('#confettiArea .confetti');
+    if(confettiCount <= confs.length){
+        confs[confettiCount-1].remove();
+    }
+    if(confettiCount >= 40){
+        nextPage('question');
+    }
+});
+
+// NO BUTTON ANIMATION
+let angryLevel = 0;
+const noBtn = document.getElementById("noBtn");
+noBtn.addEventListener("mouseover", function(){
+    angryLevel++;
+    const x = Math.random() * 250;
+    const y = Math.random() * 200;
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
+    alert("❌ ERROR! 😠".repeat(angryLevel));
+});
+
+// YES RESPONSE
+function sayYes() {
+    nextPage('yesResponse');
+}
+
+// BACKGROUND SPARKLES & PETALS
+function createSparkle() {
+    const s = document.createElement("div");
+    s.classList.add("sparkle");
+    s.innerHTML = "✨";
+    s.style.left = Math.random()*100+"vw";
+    s.style.fontSize = Math.random()*15+10+"px";
+    document.body.appendChild(s);
+    setTimeout(()=>s.remove(),6000);
+}
+setInterval(createSparkle, 200);
+
+function createPetal() {
+    const p = document.createElement("div");
+    p.classList.add("petal");
+    p.innerHTML = "🌹";
+    p.style.left = Math.random()*100+"vw";
+    p.style.animationDuration = (4+Math.random()*4)+"s";
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(),8000);
+}
+setInterval(createPetal, 400);
+</script>
+
+</body>
+</html>
